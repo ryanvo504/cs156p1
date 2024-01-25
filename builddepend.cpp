@@ -13,6 +13,7 @@ class Makes
     public:
         Makes(string x):name(x) {};
         void addDepend(string x);
+        bool hasDepend(string x);
 };
 
 void Makes::addDepend(string x)
@@ -20,9 +21,16 @@ void Makes::addDepend(string x)
     depends.push_back(x);
 }
 
+bool Makes::hasDepend(string x)
+{
+    auto it = find(depends.begin(),depends.end(), x);
+    return it != depends.end();
+}
+
 int main()
 {
     vector<Makes> m;
+    vector<string> ans;
     string line;
     getline(cin, line);
     int n = stoi(line);
@@ -38,7 +46,15 @@ int main()
             temp.addDepend(line);
         }
         m.push_back(temp);
-
+    }
+    getline(cin, line);
+    ans.push_back(line);
+    for (int i = 0; i < m.size(); i++)
+    {
+        if (m[i].hasDepend(line))
+        {
+            if (m[i])
+        }
     }
     return 0;
 }
