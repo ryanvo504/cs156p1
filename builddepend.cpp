@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <fstream>
+
 
 using namespace std;
 
@@ -30,7 +32,6 @@ void Graph::dfs(string x)
         if (!vis[y])
             dfs(y);
     }
-
 }
 
 
@@ -38,26 +39,27 @@ void Graph::dfs(string x)
 int main()
 {
     Graph g;
+    ifstream myfile ("input.txt");
     string line;
-    getline(cin, line);
+    getline(myfile, line);
     int n = stoi(line); // read n files for n lines
     for (int i = 0; i < n; i++)
     {
         getline(cin,line);
-        size_t pos = line.find(":"); // parse name of file
+        size_t pos = line.find(":"); // parse name of file without colon
         string temp = line.substr(0,pos);
-        if (line.length() > pos + 2)
+        if (line.length() > pos + 2) // checking for trailing files after name of file
         {
             line = line.substr(pos + 2); // parse rest of line skipping : and whitespace
             stringstream stream(line);
-            while (getline(stream,line, ' ')) // parse each depending file
+            while (getline(stream,line, ' ')) // parse each depending file by whitespaces
             {
-                g.addEdge(line,temp);
+                g.addEdge(line,temp); // add edges backwards
             }
         }
     }
-    getline(cin, line);
-    g.dfs(line);
+    getline(cin, line); // get affected file
+    g.dfs(line); // dfs on changed file to find affected files
 
     return 0;
 }
