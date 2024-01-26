@@ -5,56 +5,108 @@
 
 using namespace std;
 
-class Makes
+class File
 {
     private:
         string name;
-        vector<string> depends;
+        bool vis;
+        int ccnum;
     public:
-        Makes(string x):name(x) {};
-        void addDepend(string x);
-        bool hasDepend(string x);
+        File(string x):name(x),vis(false), ccnum(0) {};
+        string getName();
+        bool returnVis();
+        int returnCcnum();
 };
 
-void Makes::addDepend(string x)
+int File::returnCcnum()
 {
-    depends.push_back(x);
+    return ccnum;
 }
 
-bool Makes::hasDepend(string x)
+bool File::returnVis()
 {
-    auto it = find(depends.begin(),depends.end(), x);
-    return it != depends.end();
+    return vis;
+}
+
+
+string File::getName()
+{
+    return name;
+}
+
+
+class edge
+{
+    private:
+        string src;
+        string dst;
+    public:
+        string getSrc();
+        string getDst();
+        edge(string s, string d) : src(s), dst(d) {} ;
+};
+
+string edge::getDst()
+{
+    return dst;
+}
+string edge::getSrc()
+{
+    return src;
+}
+
+class Graph
+{
+    private:
+        vector<File> vertices;
+        vector<edge> edges;
+    public:
+        Graph(vector<File> v, vector<edge> e) : vertices(v),edges(e) {};
+        void dfs(string x, vector<string> y);
+
+};
+
+void Graph::dfs(string x, vector<string> y)
+{
+    y.push_back(x);
+    for (int i = 0; i < edges.size(); i++)
+    {
+
+        if (edges[i].getSrc() == x)
+        {
+            dfs(edges[i].getSrc(),y);
+        }
+    }
 }
 
 int main()
 {
-    vector<Makes> m;
+    vector<File> files;
     vector<string> ans;
+    vector<edge> edgs;
     string line;
     getline(cin, line);
-    int n = stoi(line);
+    int n = stoi(line); // read n files for n lines
     for (int i = 0; i < n; i++)
     {
         getline(cin,line);
-        size_t pos = line.find(":");
-        Makes temp = Makes(line.substr(0,pos - 1));
-        line = line.substr(pos + 1);
+        size_t pos = line.find(":"); // parse name of file
+        File temp = File(line.substr(0,pos - 1));
+        line = line.substr(pos + 2); // parse rest of line skipping : and whitespace
         stringstream stream(line);
-        while (getline(stream,line, ' '))
+        while (getline(stream,line, ' ')) // parse each depending file
         {
-            temp.addDepend(line);
+            edgs.push_back(edge(line,temp.getName()));
         }
-        m.push_back(temp);
+        files.push_back(temp); // add file to graph
     }
+    Graph g = Graph(files,edgs);
     getline(cin, line);
-    ans.push_back(line);
-    for (int i = 0; i < m.size(); i++)
+    g.dfs(line,ans);
+    
+    for (int i = 0; i < ans.size(); i++)
     {
-        if (m[i].hasDepend(line))
-        {
-            if (m[i])
-        }
+        cout << ans[i] << endl;
     }
     return 0;
 }
