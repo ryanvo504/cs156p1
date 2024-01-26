@@ -69,7 +69,7 @@ class Graph
 void Graph::dfs(string x, vector<string> y)
 {
     y.push_back(x);
-    for (int i = 0; i < edges.size(); i++)
+    for (size_t i = 0; i < edges.size(); i++)
     {
 
         if (edges[i].getSrc() == x)
@@ -104,7 +104,7 @@ int main()
     getline(cin, line);
     g.dfs(line,ans);
     
-    for (int i = 0; i < ans.size(); i++)
+    for (size_t i = 0; i < ans.size(); i++)
     {
         cout << ans[i] << endl;
     }
