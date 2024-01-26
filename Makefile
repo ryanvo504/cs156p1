@@ -13,6 +13,3 @@ builddepend.o: builddepend.cpp
 testDepend: builddepend.o
 	$(CPP) $(FLAGS) $^ -o $@
     # the above line expands to:
-
-clean:
-    rm -f  *o builddepend
