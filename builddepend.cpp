@@ -107,7 +107,7 @@ int main()
             files.push_back(temp);
         }
     }
-    Graph g = Graph(files,edgs);
+    Graph g(files,edgs);
     getline(cin, line);
     g.dfs(line,ans);
     
