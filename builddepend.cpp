@@ -92,13 +92,20 @@ int main()
         getline(cin,line);
         size_t pos = line.find(":"); // parse name of file
         File temp = File(line.substr(0,pos - 1));
-        line = line.substr(pos + 2); // parse rest of line skipping : and whitespace
-        stringstream stream(line);
-        while (getline(stream,line, ' ')) // parse each depending file
+        if (line.length() > pos + 3)
         {
-            edgs.push_back(edge(line,temp.getName()));
+            line = line.substr(pos + 2); // parse rest of line skipping : and whitespace
+            stringstream stream(line);
+            while (getline(stream,line, ' ')) // parse each depending file
+            {
+                edgs.push_back(edge(line,temp.getName()));
+            }
+            files.push_back(temp); // add file to graph
         }
-        files.push_back(temp); // add file to graph
+        else
+        {
+            files.push_back(temp);
+        }
     }
     Graph g = Graph(files,edgs);
     getline(cin, line);
