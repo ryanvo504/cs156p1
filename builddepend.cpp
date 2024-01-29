@@ -39,26 +39,30 @@ void Graph::dfs(string x)
 int main()
 {
     Graph g;
-    string line;
     int n;
     cin >> n;
-    cin.ignore();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n + 1; i++)
     {
+        string line;
+        vector<string> split;
         getline(cin,line);
-        size_t pos = line.find(":"); // parse name of file without colon
-        string temp = line.substr(0,pos);
-        if (line.length() > pos + 2) // checking for trailing files after name of file
+        string s;
+        stringstream stream(line);
+        while (getline(stream,s, ' ')) // parse each depending file by whitespaces
         {
-            line = line.substr(pos + 2); // parse rest of line skipping : and whitespace
-            stringstream stream(line);
-            while (getline(stream,line, ' ')) // parse each depending file by whitespaces
+                split.push_back(s);
+        }
+        split[0].pop_back(); //pop off colon from first file
+        if (split.size() > 1)
+        {
+            for (int j = 1; j < split.size() - 1; j++)
             {
-                g.addEdge(line,temp); // add edges backwards
+                        g.addEdge(split[j],split[0]); // add edges backwards
             }
         }
     }
-    cin >> line; // get affected file
-    g.dfs(line); // dfs on changed file to find affected files 
+    string start;
+    cin >> start; // get affected file
+    g.dfs(start); // dfs on changed file to find affected files 
     return 0;
 }
