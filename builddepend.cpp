@@ -39,10 +39,10 @@ void Graph::dfs(string x)
 int main()
 {
     Graph g;
-    ifstream myfile ("input.txt");
     string line;
-    getline(myfile, line);
-    int n = stoi(line); // read n files for n lines
+    int n;
+    cin >> n;
+    cin.ignore();
     for (int i = 0; i < n; i++)
     {
         getline(cin,line);
@@ -58,8 +58,7 @@ int main()
             }
         }
     }
-    getline(cin, line); // get affected file
-    g.dfs(line); // dfs on changed file to find affected files
-
+    cin >> line; // get affected file
+    g.dfs(line); // dfs on changed file to find affected files 
     return 0;
 }
