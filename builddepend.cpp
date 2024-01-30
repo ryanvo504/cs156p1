@@ -19,7 +19,7 @@ class Graph
         unordered_map<string, int> post;
         unordered_map<string, int> pre;
         queue<string> ans;
-        void dfs(string x);
+        void bfs(string x);
         void explore(string x);
         void addEdge(string src, string dest);
 };
@@ -30,31 +30,15 @@ void Graph::addEdge(string src, string dest)
     adj[src].push_back(dest);
 }
 
-void Graph::explore(string x)
-{
-    ans.push(x);
-    vis[x] = true;
-    pre[x] = clock;
-    clock++;
-    for (string y: adj[x])
-    {
-        if (!vis[y])
-            explore(y);
-    }
-    post[x] = clock;
-    clock++;
-
-}
-
-void Graph::dfs(string x)
+void Graph::bfs(string x)
 {
     ans.push(x);
     vis[x] = true;
     while (!ans.empty())
     {
         string temp = ans.front();
-        ans.pop();
         cout << temp << endl;
+        ans.pop();
         for (string y : adj[temp])
         {
             if (!vis[y])
@@ -101,6 +85,6 @@ int main()
     }
     string start;
     cin >> start; // get affected file
-    g.dfs(start); // dfs on changed file to find affected files
+    g.bfs(start); // dfs on changed file to find affected files
     return 0;
 }
