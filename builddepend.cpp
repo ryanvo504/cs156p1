@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
-#include <fstream>
+#include <queue>
 
 
 using namespace std;
@@ -11,9 +11,16 @@ using namespace std;
 class Graph
 {
     public: 
+        int clock;
+        int count;
+        vector<string> files;
         unordered_map<string, vector<string>> adj;
         unordered_map<string, bool> vis;
+        unordered_map<string, int> post;
+        unordered_map<string, int> pre;
+        queue<string> ans;
         void dfs(string x);
+        void explore(string x);
         void addEdge(string src, string dest);
 };
 
@@ -23,15 +30,44 @@ void Graph::addEdge(string src, string dest)
     adj[src].push_back(dest);
 }
 
-void Graph::dfs(string x)
+void Graph::explore(string x)
 {
+    ans.push(x);
     vis[x] = true;
-    cout << x << endl;
+    pre[x] = clock;
+    clock++;
     for (string y: adj[x])
     {
         if (!vis[y])
-            dfs(y);
+            explore(y);
     }
+    post[x] = clock;
+    clock++;
+
+}
+
+void Graph::dfs(string x)
+{
+    ans.push(x);
+    vis[x] = true;
+    while (!ans.empty())
+    {
+        string temp = ans.front();
+        ans.pop();
+        cout << temp << endl;
+        for (string y : adj[temp])
+        {
+            if (!vis[y])
+            {
+                ans.push(y);
+                vis[y] = true;
+            }
+        }
+    }
+
+
+    
+
 }
 
 
@@ -41,7 +77,8 @@ int main()
     Graph g;
     int n;
     cin >> n;
-    for (int i = 0; i < n + 1; i++)
+    cin.ignore();
+    for (int i = 0; i < n; i++)
     {
         string line;
         vector<string> split;
@@ -53,16 +90,17 @@ int main()
                 split.push_back(s);
         }
         split[0].pop_back(); //pop off colon from first file
+        g.files.push_back(split[0]);
         if (split.size() > 1)
         {
-            for (int j = 1; j < split.size() - 1; j++)
+            for (int j = 1; j < split.size(); j++)
             {
-                        g.addEdge(split[j],split[0]); // add edges backwards
+                        g.addEdge(split[j],split[0]); // add edge backwards
             }
         }
     }
     string start;
     cin >> start; // get affected file
-    g.dfs(start); // dfs on changed file to find affected files 
+    g.dfs(start); // dfs on changed file to find affected files
     return 0;
 }
