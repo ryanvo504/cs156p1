@@ -7,7 +7,10 @@ builddepend.o: builddepend.cpp
     # to the compiler
 	$(CPP) $(FLAGS) -c builddepend.cpp
     # this expands to: g++ -Wall -Werror -c shapes.cpp
- 
+grapevine.o: grapevine.cpp
+    # to make shapes.o using shapes.cpp, we only need one call
+    # to the compiler
+	$(CPP) $(FLAGS) -c grapevine.cpp
 # to make our final testShapes program, we need shapes.o, tdd.o, and 
 # testShapes.o as dependencies
 testDepend: builddepend.o
