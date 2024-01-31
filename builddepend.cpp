@@ -39,7 +39,6 @@ vector<string> Graph::bfs(string start) {
         while (!q.empty()) {
             string file = q.front();
             q.pop();
-            recompiled.push_back(file);
 
             for (string dep : adj[file]) {
                 if (!vis[dep]) {
@@ -47,6 +46,7 @@ vector<string> Graph::bfs(string start) {
                     vis[dep] = true;
                 }
             }
+            recompiled.push_back(file);
         }
 
         return recompiled;
