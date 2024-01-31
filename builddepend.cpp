@@ -18,8 +18,8 @@ class Graph
         unordered_map<string, bool> vis;
         unordered_map<string, int> post;
         unordered_map<string, int> pre;
-        vector<string> bfs(string x);
-        void explore(string x);
+        void bfs(string x);
+        void explore(string x, vector<string>& stack);
         void addEdge(string src, string dest);
 };
 
@@ -29,27 +29,30 @@ void Graph::addEdge(string src, string dest)
     adj[src].push_back(dest);
 }
 
-vector<string> Graph::bfs(string start) {
-        vector<string> recompiled;
-        queue<string> q;
-        
-        q.push(start);
-        vis[start] = true;
+void Graph::explore(string x, vector<string>& stack)
+{
+    vis[x] = true;
+    for (string y: adj[x])
+    {
+        if (!vis[y])
+            explore(y,stack);
+    }
+    stack.push_back(x);
+}
 
-        while (!q.empty()) {
-            string file = q.front();
-            q.pop();
-
-            for (string dep : adj[file]) {
-                if (!vis[dep]) {
-                    q.push(dep);
-                    vis[dep] = true;
-                }
-            }
-            recompiled.push_back(file);
+void Graph::bfs(string start) {
+        vector<string> q;
+        explore(start, q);
+        int n = q.size();
+        for (int i = 0; i < n / 2; i++)
+        {
+            swap(q[i],q[n-i-1]);
+        }
+        for (int i = 0; i < q.size(); i++)
+        {
+            cout << q[i] << endl;
         }
 
-        return recompiled;
 }
 
 
@@ -90,11 +93,7 @@ int main()
     }
     string start;
     cin >> start; // get affected file
-    vector<string> ans = g.bfs(start); // dfs on changed file to find affected files
-    for (string y: ans)
-    {
-        cout << y << endl;
-    }
+    g.bfs(start); // dfs on changed file to find affected files
     return 0;
 
 }
