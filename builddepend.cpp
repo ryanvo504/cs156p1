@@ -18,8 +18,7 @@ class Graph
         unordered_map<string, bool> vis;
         unordered_map<string, int> post;
         unordered_map<string, int> pre;
-        queue<string> ans;
-        void bfs(string x);
+        vector<string> bfs(string x);
         void explore(string x);
         void addEdge(string src, string dest);
 };
@@ -30,34 +29,38 @@ void Graph::addEdge(string src, string dest)
     adj[src].push_back(dest);
 }
 
-void Graph::bfs(string x)
-{
-    ans.push(x);
-    vis[x] = true;
-    while (!ans.empty())
-    {
-        string temp = ans.front();
-        cout << temp << endl;
-        ans.pop();
-        for (string y : adj[temp])
-        {
-            if (!vis[y])
-            {
-                ans.push(y);
-                vis[y] = true;
+vector<string> Graph::bfs(string start) {
+        vector<string> recompiled;
+        queue<string> q;
+        
+        q.push(start);
+        vis[start] = true;
+
+        while (!q.empty()) {
+            string file = q.front();
+            q.pop();
+            recompiled.push_back(file);
+
+            for (string dep : adj[file]) {
+                if (!vis[dep]) {
+                    q.push(dep);
+                    vis[dep] = true;
+                }
             }
         }
-    }
 
-
-    
-
+        return recompiled;
 }
+
+
+
+
 
 
 
 int main()
 {
+    ios_base::sync_with_stdio(false); 
     Graph g;
     int n;
     cin >> n;
@@ -77,14 +80,21 @@ int main()
         g.files.push_back(split[0]);
         if (split.size() > 1)
         {
+            if (split.size() >= 7)
+                return -1;
             for (int j = 1; j < split.size(); j++)
             {
-                        g.addEdge(split[j],split[0]); // add edge backwards
+                g.addEdge(split[j],split[0]); // add edge backwards
             }
         }
     }
     string start;
     cin >> start; // get affected file
-    g.bfs(start); // dfs on changed file to find affected files
+    vector<string> ans = g.bfs(start); // dfs on changed file to find affected files
+    for (string y: ans)
+    {
+        cout << y << endl;
+    }
     return 0;
+
 }
